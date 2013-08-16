@@ -4,7 +4,7 @@
   // --------------------------
 
   Backbone.Stickit = {
-  
+
     _handlers: [],
 
     addHandler: function(handlers) {
@@ -60,14 +60,14 @@
         var $el, options, modelAttr, visibleCb, config,
           binding = bindings[selector] || {},
           bindKey = _.uniqueId();
-        
+
         // Support ':el' selector - special case selector for the view managed delegate.
         if (selector != ':el') $el = self.$(selector);
         else {
           $el = self.$el;
           selector = '';
         }
-     
+
         // Fail fast if the selector didn't match an element.
         if (!$el.length) return false;
 
@@ -109,7 +109,7 @@
           _.each(_.flatten([modelAttr]), function(attr) {
             observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
               if (options == null || options.bindKey != bindKey)
-                updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model);
+                updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model, false, options);
             });
           });
 
@@ -269,10 +269,10 @@
   //     updateView: true, // defaults to true
   //     afterUpdate: function($el, val, options) {} // optional callback
   //
-  var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
+  var updateViewBindEl = function(view, $el, config, val, model, isInitializing, changeOptions) {
     if (!evaluateBoolean(view, config.updateView, val, config)) return;
     config.update.call(view, $el, val, model, config);
-    if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config);
+    if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config, changeOptions);
   };
 
   // Default Handlers
